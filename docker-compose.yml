@@ -1,0 +1,113 @@
+version: "3"
+services:
+
+  sabnzbd:
+    image: lscr.io/linuxserver/sabnzbd:latest
+    container_name: sabnzbd
+    environment:
+       - PUID=1036
+       - PGID=100
+       - TZ=America/New_York
+    volumes:
+       - ./sabnzbd/config:/config
+       - ${DOWNLOADDIR}:/downloads
+    ports:
+      - 8789:8080
+
+  sonarr:
+    image: lscr.io/linuxserver/sonarr:latest
+    container_name: sonarr
+    environment:
+      - PUID=1036
+      - PGID=100
+      - TZ=America/New_York
+      - UMASK_SET=022 #optional
+    volumes:
+      - ./sonarr/config:/config
+      - ${MEDIADIR}/TV:/TV
+      - ${DOWNLOADDIR}:/downloads
+#      - ./shared:/shared
+    ports:
+      - 8989:8989
+    restart: unless-stopped
+
+  radarr:
+    image: lscr.io/linuxserver/radarr
+    container_name: radarr
+    environment:
+      - PUID=1036
+      - PGID=100
+      - TZ=America/New_York
+      - UMASK_SET=022 #optional
+    volumes:
+      - ./radarr/config:/config
+      - ${MEDIADIR}/Movies:/Movies
+      - ${DOWNLOADDIR}:/downloads
+#      - ./shared:/shared
+    ports:
+      - 7878:7878
+    restart: unless-stopped
+
+  lidarr:
+    image: lscr.io/linuxserver/lidarr
+    container_name: lidarr
+    environment:
+      - PUID=1036
+      - PGID=100
+      - TZ=America/New_York
+      - UMASK_SET=022 #optional
+    volumes:
+      - ./lidarr/config:/config
+      - ${MEDIADIR}/Music:/Music
+      - ${DOWNLOADDIR}:/downloads
+#      - ./shared:/shared
+    ports:
+      - 8686:8686
+    restart: unless-stopped
+
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:develop
+    container_name: prowlarr
+    environment:
+      - PUID=1036
+      - PGID=100
+      - TZ=America/New_York
+      - UMASK_SET=022
+    volumes:
+      - ./prowlarr/config:/config
+    ports:
+      - 9696:9696
+    restart: unless-stopped
+
+  readarr:
+    image: lscr.io/linuxserver/readarr:develop
+    container_name: readarr
+    environment:
+      - PUID=1036
+      - PGID=100
+      - TZ=America/New_York
+      - UMASK_SET=022
+    volumes:
+      - ./readarr/config:/config
+      - ${MEDIADIR}/Books:/books
+      - ${DOWNLOADDIR}:/downloads
+#      - ./shared:/shared
+    ports:
+      - 8787:8787
+    restart: unless-stopped
+
+  bazarr:
+    image: lscr.io/linuxserver/bazarr:latest
+    container_name: bazarr
+    environment:
+      - PUID=1036
+      - PGID=100
+      - TZ=America/New_York
+      - UMASK_SET=022
+    volumes:
+      - ./bazarr/config:/config
+      - ${MEDIADIR}/Movies:/Movies
+      - ${MEDIADIR}/TV:/TV
+    ports:
+      - 6767:6767
+    restart: unless-stopped
